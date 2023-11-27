@@ -4,7 +4,7 @@ from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 
 # Creamos un DataFrame de ejemplo con datos ficticios de clientes
-np.random.seed(42)
+np.random.seed(50)
 clientes = {
     'Edad': np.random.randint(18, 70, size=100),
     'Ingresos_anuales': np.random.randint(20000, 150000, size=100),
@@ -13,27 +13,43 @@ clientes = {
 
 df = pd.DataFrame(clientes)
 
-# Visualizamos los datos antes de la segmentación
-plt.scatter(df['Ingresos_anuales'], df['Gasto_anual'])
-plt.xlabel('Ingresos Anuales')
-plt.ylabel('Gasto Anual')
-plt.title('Datos de Clientes antes de la Segmentación')
+# VISUALIZACIÓN DE DATOS EN GENERAL
+fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+
+ax[0].scatter(df['Ingresos_anuales'], df['Gasto_anual'])
+ax[0].set_xlabel('Ingresos Anuales')
+ax[0].set_ylabel('Gasto Anual')
+ax[0].set_title('Segmentación de Clientes (Ingresos vs Gasto)')
+
+ax[1].scatter(df['Edad'], df['Ingresos_anuales'])
+ax[1].set_xlabel('Edad')
+ax[1].set_ylabel('Ingresos Anuales')
+ax[1].set_title('Segmentación de Clientes (Edad vs Ingresos)')
 plt.show()
 
-# Aplicamos K-Means para segmentar a los clientes en 3 grupos
+# K-Means: Segmentación de Clientes en 3 grupos
 kmeans = KMeans(n_clusters=3)
-kmeans.fit(df[['Ingresos_anuales', 'Gasto_anual']])
+kmeans.fit(df[['Ingresos_anuales', 'Gasto_anual', 'Edad']])
 
-# Obtenemos las etiquetas de cluster asignadas a cada cliente
+# Obtenciónde etiqueta designada a cada cliente
 labels = kmeans.labels_
 
-# Añadimos las etiquetas al DataFrame original
+# Añadir etiquetas al DataFrame con la etiqueta 'Cluster'
 df['Cluster'] = labels
 
-# Visualizamos los clusters después de la segmentación
-plt.scatter(df['Ingresos_anuales'], df['Gasto_anual'],
-            c=df['Cluster'], cmap='viridis')
-plt.xlabel('Ingresos Anuales')
-plt.ylabel('Gasto Anual')
-plt.title('Segmentación de Clientes en 3 Grupos')
+# Visualización con clasificación
+fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+
+ax[0].scatter(df['Ingresos_anuales'], df['Gasto_anual'],
+              c=df['Cluster'], cmap='viridis')
+ax[0].set_xlabel('Ingresos Anuales')
+ax[0].set_ylabel('Gasto Anual')
+ax[0].set_title('Segmentación de Clientes (Ingresos vs Gasto)')
+
+ax[1].scatter(df['Edad'], df['Ingresos_anuales'],
+              c=df['Cluster'], cmap='viridis')
+ax[1].set_xlabel('Edad')
+ax[1].set_ylabel('Ingresos Anuales')
+ax[1].set_title('Segmentación de Clientes (Edad vs Ingresos)')
+
 plt.show()
